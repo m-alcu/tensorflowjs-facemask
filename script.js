@@ -22,7 +22,7 @@ video.addEventListener('play', () => {
   document.getElementById('video_area').append(canvas)
   const displaySize = { width: video.width, height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
-  document.getElementById('loading').innerHTML = 'Ready!';
+  document.getElementById('loading').innerHTML = 'Loaded... some seconds to start';
   setInterval(async () => {
     const detections = await faceapi.detectAllFaces(video)
     const faceImages = await faceapi.extractFaces(video, detections)
