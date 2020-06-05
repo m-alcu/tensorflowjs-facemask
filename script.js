@@ -1,14 +1,14 @@
 const video = document.getElementById('video')
 const MASK_CLASSES = ['Mask', 'No Mask'];
-let model
+let facemaskModel
 
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri('models'),
-  loadfacemaskModel('model/model.json')
+  faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+  loadfacemaskModel('./model/model.json')
 ]).then(startVideo)
 
 async function loadfacemaskModel(urlModel) {
-  model = await tf.loadLayersModel(urlModel);
+  facemaskModel = await tf.loadLayersModel(urlModel);
 }
 
 function startVideo() {
@@ -19,9 +19,10 @@ function startVideo() {
 
 video.addEventListener('play', () => {
   const canvas = faceapi.createCanvasFromMedia(video)
-  document.body.append(canvas)
+  document.getElementById('video_area').append(canvas)
   const displaySize = { width: video.width, height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
+  document.getElementById('loading').innerHTML = 'Ready!';
   setInterval(async () => {
     const detections = await faceapi.detectAllFaces(video)
     const faceImages = await faceapi.extractFaces(video, detections)
@@ -36,7 +37,7 @@ video.addEventListener('play', () => {
     });
     const resizedDetections = faceapi.resizeResults(detections, displaySize)
     faceTensors.forEach((faceTensor, i) => {
-      const facemaskPrediction = model.predict(faceTensor)
+      const facemaskPrediction = facemaskModel.predict(faceTensor)
       const maskLabel = MASK_CLASSES[facemaskPrediction.argMax(-1).dataSync()[0]];
       const faceBox = resizedDetections[i].box
       canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
