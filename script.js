@@ -3,8 +3,8 @@ const MASK_CLASSES = ['Mask', 'No Mask'];
 let facemaskModel
 
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri('/tensorflowjs-facemask/models'),
-  loadfacemaskModel('/tensorflowjs-facemask/model/model.json')
+  faceapi.nets.ssdMobilenetv1.loadFromUri('models'),
+  loadfacemaskModel('model/model.json')
 ]).then(startVideo)
 
 async function loadfacemaskModel(urlModel) {
